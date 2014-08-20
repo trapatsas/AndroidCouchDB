@@ -1,6 +1,8 @@
 package com.example.ptrapatsas.hellocouch;
 
 import android.app.Activity;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
@@ -10,6 +12,8 @@ import android.widget.TextView;
 import com.couchbase.lite.*;
 import com.couchbase.lite.android.AndroidContext;
 import com.couchbase.lite.util.Log;
+
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,10 +29,22 @@ public class MyActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my);
         // My code
+
+        WifiManager wifiManager = (WifiManager) getSystemService(WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        Log.d("wifiInfo", wifiInfo.toString());
+        Log.d("SSID",wifiInfo.getSSID());
+
         final String TAG = "HelloWorld";
         Log.d(TAG, "Begin Hello World App");
         TextView mainTxtView = (TextView) findViewById(R.id.txtView01);
         mainTxtView.setMovementMethod(new ScrollingMovementMethod());
+
+        mainTxtView.append("\n" +
+                " -2. wifiInfo: " + wifiInfo.toString());
+        mainTxtView.append("\n" +
+                " -1. SSID: " + wifiInfo.getSSID());
+        mainTxtView.append("\n 0. Hello your ip: is" + Utils.getIPAddress(true));
         mainTxtView.append("\n 1. Begin Hello World App");
         // create a manager
         Manager manager;
@@ -138,9 +154,6 @@ public class MyActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 }
